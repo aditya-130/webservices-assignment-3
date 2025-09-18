@@ -1,0 +1,65 @@
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx_proxy
+    restart: always
+    ports:
+      - '8080:80' # Expose only one port externally
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro # Mount custom NGINX config
+    depends_on:
+      - urlshortener
+      - authservice
+  urlshortener:
+    build: ./URLShortenerService
+    container_name: urlshortener
+    restart: always
+    environment:
+      DATABASE_URL: postgresql://user:password@postgres:5432/urlshortener
+      AUTH_SERVICE_URL: http://nginx/users/validate # Use service name instead of localhost
+    ports:
+      - '5000'
+    depends_on:
+      - postgres
+    volumes:
+      - ./URLShortenerService:/app/URLShortenerService
+
+  authservice:
+    build: ./AuthService
+    container_name: authservice
+    restart: always
+    environment:
+      DATABASE_URL: postgresql://user:password@postgres:5432/urlshortener
+    ports:
+      - '5001'
+    depends_on:
+      - postgres
+    volumes:
+      - ./AuthService:/app/AuthService
+  postgres:
+    image: postgres:13 # Use PostgreSQL version 13
+    restart: always
+    container_name: postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: urlshortener
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data # Persistent storage
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - '5050:80'
+    depends_on:
+      - postgres
+
+volumes:
+  pgdata:
