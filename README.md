@@ -7,7 +7,7 @@ This project consists of two Flask-based microservices: an authentication servic
 ### 1️. Clone the Repository
 
 ```sh
-git clone https://github.com/ahmetkarapinar/webservices-assignment-3
+git clone https://github.com/aditya-130/webservices-assignment-3.git
 
 ```
 
@@ -54,3 +54,7 @@ Adam DS, "Python manually create jwt token without library", Stack Overflow, Oct
 | `GET`      | `/<id>`      | Retrieve full URL from short ID |
 | `PUT`      | `/<id>`      | Update an existing short URL    |
 | `DELETE`   | `/<id>`      | Delete a short URL              |
+
+
+This project has been done in collaboration with ahmetkarapinar and oykudanisik for the course Web Services and Cloud-Based Systems(
+X_418110) for the MS Computer Science programme at University Of Amsterdam
